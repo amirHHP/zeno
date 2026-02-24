@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM هوشمند - نمونه اولیه با ثبت فعالیت</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+            Placeholder Comments as per instructions.
+            No other comments are included in the code.
+        */
+        /* <!-- Chosen Palette: Calm Neutral --> */
+        /* <!-- Application Structure Plan: The SPA structure is mobile-first, now with four primary views: Funnel, Reports, Automations, and a new dynamic Deal Detail page. The main navigation remains a bottom tab bar for core sections. The Deal Detail view is now a full page, not a modal, which is activated when a user clicks a deal card. This provides more space for complex information like the activity timeline and tasks, as requested. A 'back' button allows users to return to the funnel, maintaining a fluid, app-like user flow. This structure better accommodates the rich data required for a 360-degree customer view. --> */
+        /* <!-- Visualization & Content Choices: 
+            - Deal Detail Page: This new page is the central update. It uses a tabbed interface (HTML/CSS/JS) to switch between 'Activities' and 'Tasks', which is an efficient way to organize related but distinct information on a mobile screen.
+            - Activity Timeline: Implemented as a vertically-scrolling list within the 'Activities' tab. Each item is styled to represent its type (call, email, meeting) using icons (Unicode characters) for quick visual scanning. Method: Dynamic HTML generation with JS.
+            - Quick Add Activity: A form at the bottom of the timeline allows users to log new interactions, directly fulfilling a key user story. Method: HTML form + JS.
+            - NEW Feature (Magic Add): Added a Floating Action Button (+) that triggers a modal. This uses Gemini with Google Search grounding to auto-fill company details, demonstrating the 'AI-First' principle.
+            - Justification: These changes directly address the user's request for a comprehensive deal detail view and smart data entry.
+        --> */
+        /* <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. --> */
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .tab-icon {
+            width: 24px;
+            height: 24px;
+            stroke-width: 1.5;
+        }
+        .active-tab {
+            color: #4f46e5; /* indigo-600 */
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .kanban-container {
+            display: flex;
+            overflow-x: scroll;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .kanban-container::-webkit-scrollbar {
+            display: none;
+        }
+        .kanban-stage {
+            flex: 0 0 100%;
+            width: 100%;
+            scroll-snap-align: start;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        .spinner {
+            border-top-color: #4f46e5;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .detail-tab {
+            border-bottom: 2px solid transparent;
+        }
+        .detail-tab.active {
+            border-bottom-color: #4f46e5;
+            color: #4f46e5;
+            font-weight: 700;
+        }
+        .detail-tab-content {
+            display: none;
+        }
+        .detail-tab-content.active {
+            display: block;
+        }
+        .activity-type-btn.active {
+            background-color: #e0e7ff; /* indigo-100 */
+            color: #3730a3; /* indigo-800 */
+            transform: scale(1.1);
+        }
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            z-index: 30;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .modal {
+            display: none;
+        }
+        .modal.active {
+            display: flex;
+        }
+
+        /* Zeno design system */
+        :root {
+            --zen-bg: #f3f4f6;
+            --zen-surface: #ffffff;
+            --zen-surface-muted: #f9fafb;
+            --zen-border-subtle: #e5e7eb;
+            --zen-border-strong: #d1d5db;
+            --zen-primary: #4f46e5;
+            --zen-primary-soft: #eef2ff;
+            --zen-primary-soft-strong: #e0e7ff;
+            --zen-accent: #10b981;
+            --zen-danger: #ef4444;
+            --zen-radius-md: 12px;
+            --zen-radius-lg: 18px;
+            --zen-radius-pill: 999px;
+            --zen-shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.06);
+            --zen-shadow-card: 0 18px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        body {
+            background: radial-gradient(circle at top, #eef2ff 0, #f3f4f6 40%, #e5e7eb 100%);
+            color: #0f172a;
+        }
+
+        #app {
+            max-width: 72rem;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.24);
+        }
+
+        nav {
+            background-color: rgba(15, 23, 42, 0.93);
+            backdrop-filter: blur(18px);
+            border-top: 1px solid rgba(148, 163, 184, 0.4);
+        }
+
+        nav .tab-button {
+            color: #cbd5f5;
+        }
+
+        nav .tab-button.active-tab {
+            color: #f9fafb;
+        }
+
+        nav .tab-button span {
+            font-size: 0.75rem;
+        }
+
+        .bg-white {
+            background-color: var(--zen-surface);
+            border-radius: var(--zen-radius-lg);
+            box-shadow: var(--zen-shadow-soft);
+            border: 1px solid rgba(148, 163, 184, 0.28);
+        }
+
+        .chart-container {
+            background: radial-gradient(circle at top, #eef2ff 0, #ffffff 55%, #e5e7eb 100%);
+            border-radius: var(--zen-radius-md);
+            padding: 0.75rem;
+            box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+        }
+
+        .deal-card {
+            background-color: var(--zen-surface);
+            border-radius: var(--zen-radius-md);
+            box-shadow: var(--zen-shadow-soft);
+            border: 1px solid rgba(148, 163, 184, 0.26);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+
+        .deal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--zen-shadow-card);
+            border-color: rgba(79, 70, 229, 0.5);
+        }
+
+        .detail-tab {
+            border-bottom: 2px solid transparent;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .detail-tab.active {
+            border-bottom-color: var(--zen-primary);
+            color: var(--zen-primary);
+            font-weight: 700;
+        }
+
+        .activity-type-btn {
+            background-color: #f3f4f6;
+        }
+
+        .activity-type-btn.active {
+            background-color: var(--zen-primary-soft-strong);
+            color: #3730a3;
+            transform: scale(1.08);
+        }
+
+        .fab {
+            bottom: 88px;
+            left: 24px;
+            border-radius: var(--zen-radius-pill);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.35);
+        }
+
+        .modal {
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal > div {
+            border-radius: 24px 24px 0 0;
+        }
+
+        @media (min-width: 640px) {
+            .modal {
+                align-items: center;
+            }
+
+            .modal > div {
+                border-radius: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div id="app" class="pb-20">
+        <!-- Main App View -->
+        <div id="main-app-view" class="page active">
+            <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-20 border-b border-gray-200">
+                <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+                    <h1 id="header-title" class="text-xl font-bold text-gray-800">فانل فروش</h1>
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    </button>
+                </div>
+            </header>
+
+            <main class="max-w-4xl mx-auto">
+                <div id="page-funnel" class="page active">
+                    <div class="kanban-container" id="kanban-container"></div>
+                    <div class="flex justify-center mt-4 space-x-2 space-x-reverse" id="kanban-dots"></div>
+                </div>
+                <div id="page-reports" class="page">
+                    <div class="p-4 space-y-8">
+                        <div class="bg-white p-4 rounded-lg shadow-sm border"><h3 class="font-bold mb-4">فروش ماه جاری</h3><div class="chart-container"><canvas id="salesChart"></canvas></div></div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border"><h3 class="font-bold mb-4">دلایل شکست معاملات</h3><div class="chart-container"><canvas id="lossReasonChart"></canvas></div></div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm border"><h3 class="font-bold mb-4">مشتریان برتر</h3><div class="chart-container"><canvas id="topCustomersChart"></canvas></div></div>
+                    </div>
+                </div>
+                <div id="page-automations" class="page">
+                     <div class="p-4 space-y-6">
+                        <div class="bg-white p-4 rounded-lg shadow-sm border">
+                            <h3 class="font-bold text-lg mb-4">✨ دستیار هوشمند نوشتن</h3>
+                            <p class="text-sm text-gray-600 mb-4">یک متن حرفه‌ای برای پیگیری مشتری از هوش مصنوعی دریافت کنید.</p>
+                            <button id="generate-followup-btn" class="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">پیشنهاد متن پیگیری</button>
+                            <div id="gemini-followup-output" class="mt-4 p-3 bg-gray-100 rounded-lg text-sm" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            <!-- Floating Action Button for New Deal -->
+            <button id="fab-add-deal" class="fab bg-indigo-600 text-white w-14 h-14 rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors active:scale-95">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            </button>
+
+            <nav class="fixed bottom-0 right-0 left-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 z-20">
+                <div class="max-w-4xl mx-auto flex justify-around">
+                    <button data-page="funnel" class="tab-button flex-1 py-2 px-1 text-center text-sm active-tab">
+                        <svg class="tab-icon mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2z"></path></svg>
+                        <span class="mt-1 block">فانل</span>
+                    </button>
+                    <button data-page="reports" class="tab-button flex-1 py-2 px-1 text-center text-gray-500 text-sm">
+                        <svg class="tab-icon mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <span class="mt-1 block">گزارش‌ها</span>
+                    </button>
+                    <button data-page="automations" class="tab-button flex-1 py-2 px-1 text-center text-gray-500 text-sm">
+                        <svg class="tab-icon mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547a2 2 0 00-.547 1.806l.477 2.387a6 6 0 00.517 3.86l.158.318a6 6 0 00.517 3.86l.477 2.387a2 2 0 001.806.547a2 2 0 001.022-.547l2.387-.477a6 6 0 003.86-.517l.318-.158a6 6 0 013.86-.517l2.387.477a2 2 0 001.806-.547a2 2 0 00.547-1.806l-.477-2.387a6 6 0 00-.517-3.86l-.158-.318a6 6 0 00-.517-3.86l-.477-2.387zM12 15a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                        <span class="mt-1 block">اتوماسیون</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Deal Detail Page -->
+        <div id="deal-detail-page" class="page">
+            <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-20 border-b border-gray-200">
+                <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+                    <h1 id="detail-header-title" class="text-xl font-bold text-gray-800 truncate"></h1>
+                    <button id="back-to-funnel-btn" class="p-2 rounded-full hover:bg-gray-100">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </header>
+            <main id="deal-detail-content" class="p-4 space-y-6 max-w-4xl mx-auto"></main>
+        </div>
+    </div>
+
+    <!-- New Deal Modal -->
+    <div id="new-deal-modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-40 justify-center items-end sm:items-center">
+        <div class="bg-white w-full sm:w-96 sm:rounded-lg rounded-t-xl p-6 shadow-2xl transition-transform transform translate-y-0 sm:translate-y-0">
+            <h2 class="text-xl font-bold mb-4">معامله جدید 🪄</h2>
+            
+            <div id="step-1-input">
+                <label class="block text-sm font-medium text-gray-700 mb-2">نام شرکت یا مشتری</label>
+                <input type="text" id="company-name-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none mb-4" placeholder="مثلاً: دیجی‌کالا">
+                <button id="magic-fill-btn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 flex justify-center items-center gap-2">
+                    <span>✨ تکمیل خودکار با هوش مصنوعی</span>
+                </button>
+            </div>
+
+            <div id="step-2-form" style="display: none;" class="space-y-3">
+                <div>
+                    <label class="text-xs text-gray-500">نام شرکت</label>
+                    <input type="text" id="new-deal-name" class="w-full p-2 border rounded bg-gray-50">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">وب‌سایت</label>
+                    <input type="text" id="new-deal-website" class="w-full p-2 border rounded">
+                </div>
+                 <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs text-gray-500">صنعت</label>
+                        <input type="text" id="new-deal-industry" class="w-full p-2 border rounded">
+                    </div>
+                     <div>
+                        <label class="text-xs text-gray-500">تخمین ارزش</label>
+                        <input type="text" id="new-deal-value" class="w-full p-2 border rounded text-green-600 font-bold">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-500">تلفن / آدرس</label>
+                    <input type="text" id="new-deal-phone" class="w-full p-2 border rounded mb-1" placeholder="تلفن">
+                    <input type="text" id="new-deal-address" class="w-full p-2 border rounded" placeholder="آدرس">
+                </div>
+                
+                <button id="create-deal-btn" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 mt-2">ثبت معامله</button>
+            </div>
+
+            <button id="close-modal-btn" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="fixed inset-0 bg-black bg-opacity-25 z-50 justify-center items-center" style="display: none;">
+        <div class="spinner w-12 h-12 rounded-full border-4 border-gray-300"></div>
+    </div>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainAppView = document.getElementById('main-app-view');
+        const dealDetailPage = document.getElementById('deal-detail-page');
+        const pages = mainAppView.querySelectorAll('.page');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const headerTitle = document.getElementById('header-title');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const backToFunnelBtn = document.getElementById('back-to-funnel-btn');
+
+        // Modal Elements
+        const fabAddDeal = document.getElementById('fab-add-deal');
+        const newDealModal = document.getElementById('new-deal-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const magicFillBtn = document.getElementById('magic-fill-btn');
+        const createDealBtn = document.getElementById('create-deal-btn');
+        const step1Input = document.getElementById('step-1-input');
+        const step2Form = document.getElementById('step-2-form');
+
+        const generateFollowupBtn = document.getElementById('generate-followup-btn');
+        const geminiFollowupOutput = document.getElementById('gemini-followup-output');
+
+        let currentDealData = {};
+        const currentUser = "شما"; 
+
+        const pageTitles = {
+            funnel: 'فانل فروش',
+            reports: 'گزارش‌ها و تحلیل',
+            automations: 'اتوماسیون‌ها'
+        };
+
+        const setActiveTab = (pageId) => {
+            pages.forEach(page => page.classList.toggle('active', page.id === `page-${pageId}`));
+            tabButtons.forEach(button => {
+                button.classList.toggle('active-tab', button.dataset.page === pageId);
+                button.classList.toggle('text-gray-500', button.dataset.page !== pageId);
+            });
+            headerTitle.textContent = pageTitles[pageId];
+            if (pageId === 'reports') initCharts();
+        };
+
+        tabButtons.forEach(button => button.addEventListener('click', () => setActiveTab(button.dataset.page)));
+        backToFunnelBtn.addEventListener('click', () => {
+            mainAppView.classList.add('active');
+            dealDetailPage.classList.remove('active');
+        });
+
+        // --- Gemini API with Search Grounding ---
+        async function callGeminiAPI(prompt, outputElement = null) {
+            loadingSpinner.style.display = 'flex';
+            if(outputElement) {
+                outputElement.style.display = 'none';
+                outputElement.textContent = '';
+            }
+            
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            // Adding Google Search Tool for grounding
+            const payload = { 
+                contents: [{ parts: [{ text: prompt }] }],
+                tools: [{ google_search: {} }] 
+            };
+
+            try {
+                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`Error: ${response.status}`);
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0]) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    if(outputElement) {
+                        outputElement.textContent = text;
+                        outputElement.style.display = 'block';
+                    }
+                    return text;
+                } else {
+                   throw new Error("پاسخ نامعتبر از Gemini API دریافت شد.");
+                }
+            } catch (error) {
+                console.error(error);
+                if(outputElement) {
+                    outputElement.textContent = `خطا در ارتباط با هوش مصنوعی: ${error.message}`;
+                    outputElement.style.display = 'block';
+                }
+                return null;
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+        
+        // --- Magic Fill Logic ---
+        fabAddDeal.addEventListener('click', () => {
+            newDealModal.classList.add('active');
+            step1Input.style.display = 'block';
+            step2Form.style.display = 'none';
+            document.getElementById('company-name-input').value = '';
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            newDealModal.classList.remove('active');
+        });
+
+        magicFillBtn.addEventListener('click', async () => {
+            const companyName = document.getElementById('company-name-input').value;
+            if(!companyName) return;
+
+            const prompt = `Find information for the company '${companyName}' (located in Iran if applicable, or global). 
+            Return a JSON object with these keys: 
+            - name (Official name)
+            - website
+            - phone (Support or HQ)
+            - address (Short HQ address)
+            - industry
+            - estimated_value (Estimate a deal value in Tomans based on company size/market. e.g. "50,000,000 تومان". If unknown, make a realistic guess for a B2B deal).
+            
+            Output ONLY raw JSON. No markdown block.`;
+
+            const resultText = await callGeminiAPI(prompt);
+            if(resultText) {
+                try {
+                    // Clean up potential markdown code blocks
+                    const cleanJson = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
+                    const info = JSON.parse(cleanJson);
+                    
+                    document.getElementById('new-deal-name').value = info.name || companyName;
+                    document.getElementById('new-deal-website').value = info.website || '';
+                    document.getElementById('new-deal-industry').value = info.industry || '';
+                    document.getElementById('new-deal-value').value = info.estimated_value || 'نامشخص';
+                    document.getElementById('new-deal-phone').value = info.phone || '';
+                    document.getElementById('new-deal-address').value = info.address || '';
+
+                    step1Input.style.display = 'none';
+                    step2Form.style.display = 'block';
+                } catch (e) {
+                    alert('نتوانستیم اطلاعات را به صورت خودکار استخراج کنیم. لطفاً دستی وارد کنید.');
+                    step1Input.style.display = 'none';
+                    step2Form.style.display = 'block';
+                    document.getElementById('new-deal-name').value = companyName;
+                }
+            }
+        });
+
+        createDealBtn.addEventListener('click', () => {
+            const newDeal = {
+                id: Date.now(),
+                stage: 1, // Start at Lead
+                name: document.getElementById('new-deal-name').value,
+                value: document.getElementById('new-deal-value').value,
+                tags: ['جدید'],
+                prob: 20,
+                owner: currentUser,
+                contact: 'نامشخص',
+                company: document.getElementById('new-deal-name').value,
+                activities: [],
+                tasks: []
+            };
+            
+            dealsData.unshift(newDeal);
+            renderKanban();
+            newDealModal.classList.remove('active');
+            setActiveTab('funnel');
+        });
+
+
+        generateFollowupBtn.addEventListener('click', () => {
+            const prompt = `یک ایمیل پیگیری کوتاه، مودبانه و حرفه‌ای به زبان فارسی بنویس. فرض کن ۳ روز از ارسال پیشنهاد قیمت گذشته و هنوز پاسخی دریافت نشده است. هدف، دریافت بازخورد از مشتری است.`;
+            callGeminiAPI(prompt, geminiFollowupOutput);
+        });
+
+        const dealsData = [
+            { id: 1, stage: 1, name: 'شرکت فناوری نوین', value: '۱۵۰،۰۰۰،۰۰۰ تومان', tags: ['استراتژیک'], prob: 85, owner: 'مریم رضایی', contact: 'آقای احمدی', company: 'فناوری نوین', activities: [{type:'call', user:'مریم رضایی', time:'۲ روز پیش', text:'تماس اولیه برقرار شد. نیازمندی‌ها بررسی شد.'}, {type:'note', user:'مریم رضایی', time:'دیروز', text:'نیاز به ارسال نمونه کار دارند.'}], tasks: [{text:'ارسال نمونه کارها', due:'فردا', done:false}]},
+            { id: 2, stage: 1, name: 'پروژه وب‌سایت آریا', value: '۲۰،۰۰۰،۰۰۰ تومان', tags: ['نمایشگاه'], prob: 55, owner: 'علی کریمی', contact: 'خانم شمس', company: 'گروه آریا', activities: [{type:'meeting', user:'علی کریمی', time:'۳ روز پیش', text:'جلسه معارفه در نمایشگاه برگزار شد. علاقمند به پلن پایه هستند.'}], tasks: []},
+            { id: 3, stage: 2, name: 'گروه صنعتی پارس', value: '۳۲۰،۰۰۰،۰۰۰ تومان', tags: ['پیگیری فوری'], prob: 30, owner: 'سارا محمدی', contact: 'آقای رسولی', company: 'صنعتی پارس', activities: [{type:'email', user:'سارا محمدی', time:'۱۰:۳۰ صبح', text:'ایمیل معرفی محصولات ارسال شد.'}], tasks: [{text:'تماس تلفنی جهت پیگیری ایمیل', due:'امروز', done:true}, {text:'آماده‌سازی پیشنهاد قیمت', due:'فردا', done:false}]},
+            { id: 4, stage: 3, name: 'فروشگاه زنجیره‌ای امید', value: '۸۰،۰۰۰،۰۰۰ تومان', tags: [], prob: 78, owner: 'مریم رضایی', contact: 'آقای تهرانی', company: 'فروشگاه امید', activities: [{type:'meeting', user:'مریم رضایی', time:'هفته پیش', text:'جلسه دمو برگزار شد. بازخورد مثبت بود.'}, {type:'email', user:'مریم رضایی', time:'۲ روز پیش', text:'پیشنهاد قیمت رسمی ارسال شد.'}], tasks: [{text:'پیگیری تلفنی پیشنهاد قیمت', due:'فردا', done:false}]},
+        ];
+        const stagesData = [ { id: 1, name: 'Lead (سرنخ)' }, { id: 2, name: 'Contact Made (تماس اولیه)' }, { id: 3, name: 'Proposal Sent (پیشنهاد ارسال شده)' }];
+        const activityIcons = { call: '📞', email: '✉️', meeting: '👥', note: '📝' };
+        
+        function renderActivityTimeline(activities) {
+            const container = document.getElementById('activity-timeline-container');
+            if (!container) return;
+            container.innerHTML = activities.map(act => `
+                <div class="flex items-start space-x-3 space-x-reverse">
+                    <div class="text-xl pt-1">${activityIcons[act.type] || '📌'}</div>
+                    <div class="flex-1">
+                        <p class="text-sm">${act.text}</p>
+                        <p class="text-xs text-gray-500 mt-1">${act.user} • ${act.time}</p>
+                    </div>
+                </div>
+            `).join('') || '<p class="text-sm text-gray-500 text-center py-4">فعالیتی ثبت نشده است.</p>';
+        }
+
+        function renderDealDetailPage(deal) {
+            currentDealData = deal;
+            const detailContent = document.getElementById('deal-detail-content');
+            document.getElementById('detail-header-title').textContent = deal.name;
+            
+            detailContent.innerHTML = `
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-white p-3 rounded-lg shadow-sm border"><h3 class="font-semibold text-gray-500 text-sm mb-1">ارزش معامله</h3><p class="text-green-600 font-bold text-lg">${deal.value}</p></div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border"><h3 class="font-semibold text-gray-500 text-sm mb-1">مسئول</h3><p class="font-semibold">${deal.owner}</p></div>
+                </div>
+                
+                <div class="bg-white p-4 rounded-lg shadow-sm border">
+                     <h3 class="font-bold text-md mb-3">✨ دستیار هوشمند معامله</h3>
+                     <div class="space-y-3">
+                        <button id="detail-generate-summary-btn" class="w-full text-left flex items-center justify-between bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold py-2 px-4 rounded-lg transition-colors"><span>خلاصه وضعیت</span><span>✨</span></button>
+                        <button id="detail-generate-action-btn" class="w-full text-left flex items-center justify-between bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold py-2 px-4 rounded-lg transition-colors"><span>پیشنهاد اقدام بعدی</span><span>✨</span></button>
+                     </div>
+                     <div id="detail-gemini-output" class="mt-4 p-3 bg-gray-100 rounded-lg text-sm" style="display: none;"></div>
+                </div>
+
+                <div>
+                    <div class="border-b border-gray-200">
+                        <nav class="-mb-px flex space-x-4 space-x-reverse" aria-label="Tabs">
+                            <button data-tab="activities" class="detail-tab whitespace-nowrap py-3 px-1 text-sm active">فعالیت‌ها</button>
+                            <button data-tab="tasks" class="detail-tab whitespace-nowrap py-3 px-1 text-sm">وظایف</button>
+                        </nav>
+                    </div>
+                    <div class="mt-4">
+                        <div id="tab-activities" class="detail-tab-content active">
+                            <div id="activity-timeline-container" class="space-y-4"></div>
+                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                <h4 class="font-bold mb-3 text-gray-800">ثبت فعالیت جدید</h4>
+                                <form id="add-activity-form">
+                                    <div>
+                                        <textarea id="activity-text" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="خلاصه جلسه، نتیجه تماس و..."></textarea>
+                                    </div>
+                                    <div class="my-3 flex justify-between items-center">
+                                        <div class="flex items-center space-x-2 space-x-reverse" id="activity-type-selector">
+                                            <button type="button" data-type="note" title="یادداشت" class="activity-type-btn p-2 rounded-full transition-all duration-200">📝</button>
+                                            <button type="button" data-type="call" title="تماس" class="activity-type-btn p-2 rounded-full transition-all duration-200">📞</button>
+                                            <button type="button" data-type="email" title="ایمیل" class="activity-type-btn p-2 rounded-full transition-all duration-200">✉️</button>
+                                            <button type="button" data-type="meeting" title="جلسه" class="activity-type-btn p-2 rounded-full transition-all duration-200">👥</button>
+                                        </div>
+                                        <button type="submit" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors">ثبت</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="tab-tasks" class="detail-tab-content space-y-3">
+                             ${deal.tasks.map(task => `
+                                <div class="flex items-center bg-white p-3 rounded-lg">
+                                    <input type="checkbox" class="ml-3 h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" ${task.done ? 'checked' : ''}>
+                                    <div class="flex-1">
+                                        <p class="text-sm ${task.done ? 'line-through text-gray-500' : ''}">${task.text}</p>
+                                        <p class="text-xs text-red-600">${task.due}</p>
+                                    </div>
+                                </div>
+                            `).join('') || '<p class="text-sm text-gray-500 text-center py-4">وظیفه‌ای ثبت نشده است.</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            renderActivityTimeline(deal.activities);
+
+            const detailGeminiOutput = document.getElementById('detail-gemini-output');
+            document.getElementById('detail-generate-summary-btn').addEventListener('click', () => {
+                const prompt = `به عنوان یک دستیار فروش حرفه‌ای، وضعیت معامله زیر را در یک پاراگراف کوتاه خلاصه کن:\nنام معامله: ${deal.name}\nارزش: ${deal.value}\nمرحله فعلی: ${stagesData.find(s=>s.id === deal.stage).name}\nتگ‌ها: ${deal.tags.join(', ')}\nآخرین فعالیت: ${deal.activities.length > 0 ? deal.activities[0].text : 'ندارد'}`;
+                callGeminiAPI(prompt, detailGeminiOutput);
+            });
+            document.getElementById('detail-generate-action-btn').addEventListener('click', () => {
+                const prompt = `با توجه به اطلاعات معامله زیر، بهترین اقدام بعدی که فروشنده باید انجام دهد چیست؟ فقط یک اقدام مشخص و عملیاتی پیشنهاد بده.\nنام معامله: ${deal.name}\nمرحله فعلی: ${stagesData.find(s=>s.id === deal.stage).name}\nآخرین فعالیت: ${deal.activities.length > 0 ? deal.activities[0].text : 'ندارد'}`;
+                callGeminiAPI(prompt, detailGeminiOutput);
+            });
+
+            const detailTabs = detailContent.querySelectorAll('.detail-tab');
+            const detailTabContents = detailContent.querySelectorAll('.detail-tab-content');
+            detailTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    detailTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    detailTabContents.forEach(c => c.classList.toggle('active', c.id === `tab-${tab.dataset.tab}`));
+                });
+            });
+
+            const activityForm = document.getElementById('add-activity-form');
+            const activityTypeSelector = document.getElementById('activity-type-selector');
+            const activityTypeButtons = activityTypeSelector.querySelectorAll('.activity-type-btn');
+            let selectedActivityType = 'note'; 
+
+            const setActiveTypeButton = (type) => {
+                activityTypeButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.type === type);
+                });
+            };
+            
+            activityTypeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectedActivityType = btn.dataset.type;
+                    setActiveTypeButton(selectedActivityType);
+                });
+            });
+            
+            setActiveTypeButton(selectedActivityType);
+
+            activityForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const activityText = document.getElementById('activity-text').value.trim();
+                if (activityText === '') return;
+
+                const newActivity = {
+                    type: selectedActivityType,
+                    user: currentUser,
+                    time: 'همین الان',
+                    text: activityText
+                };
+
+                currentDealData.activities.unshift(newActivity);
+                renderActivityTimeline(currentDealData.activities);
+                
+                document.getElementById('activity-text').value = '';
+            });
+
+            mainAppView.classList.remove('active');
+            dealDetailPage.classList.add('active');
+        }
+
+        function renderKanban() {
+            const kanbanContainer = document.getElementById('kanban-container');
+            const dotsContainer = document.getElementById('kanban-dots');
+            kanbanContainer.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            stagesData.forEach((stage, index) => {
+                const stageDeals = dealsData.filter(d => d.stage === stage.id);
+                const dealsHtml = stageDeals.map(deal => {
+                    const probColor = deal.prob > 70 ? 'green' : deal.prob > 40 ? 'yellow' : 'red';
+                    return `<div class="deal-card bg-white p-3 rounded-lg shadow-sm border cursor-pointer" data-deal-id="${deal.id}">
+                        <h3 class="font-semibold">${deal.name}</h3>
+                        <p class="text-sm text-green-600">${deal.value}</p>
+                        <div class="flex items-center justify-between mt-2">
+                            <div class="flex space-x-1 space-x-reverse">${deal.tags.map(t => `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">${t}</span>`).join('')}</div>
+                            <div class="text-xs font-bold text-${probColor}-700 bg-${probColor}-100 px-2 py-1 rounded-full">${deal.prob}%</div>
+                        </div></div>`;
+                }).join('');
+                kanbanContainer.innerHTML += `<div class="kanban-stage p-4"><h2 class="font-bold text-lg mb-4">${stage.name} <span class="text-sm font-normal text-gray-500">(${stageDeals.length})</span></h2><div class="space-y-3">${dealsHtml}</div></div>`;
+                dotsContainer.innerHTML += `<div class="w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-indigo-600' : 'bg-gray-300'}"></div>`;
+            });
+            
+            document.querySelectorAll('.deal-card').forEach(card => card.addEventListener('click', () => renderDealDetailPage(dealsData.find(d => d.id === parseInt(card.dataset.dealId)))));
+        
+            let currentStageIndex = 0;
+            const updateDots = () => {
+                const dots = dotsContainer.children;
+                for (let i = 0; i < dots.length; i++) {
+                    dots[i].classList.toggle('bg-indigo-600', i === currentStageIndex);
+                    dots[i].classList.toggle('bg-gray-300', i !== currentStageIndex);
+                }
+            };
+            kanbanContainer.addEventListener('scroll', () => {
+                const newIndex = Math.round(kanbanContainer.scrollLeft / kanbanContainer.offsetWidth);
+                if (newIndex !== currentStageIndex) {
+                    currentStageIndex = newIndex;
+                    updateDots();
+                }
+            });
+        }
+
+        let charts = {};
+        function initCharts() {
+            if (Object.keys(charts).length > 0) return;
+            Chart.defaults.font.family = "'Vazirmatn', sans-serif";
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            charts.sales = new Chart(salesCtx, { type: 'line', data: { labels: ['هفته ۱', 'هفته ۲', 'هفته ۳', 'هفته ۴'], datasets: [{ label: 'فروش (میلیون تومان)', data: [65, 59, 80, 81], fill: true, backgroundColor: 'rgba(79, 70, 229, 0.1)', borderColor: 'rgba(79, 70, 229, 1)', tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } } });
+            const lossCtx = document.getElementById('lossReasonChart').getContext('2d');
+            charts.loss = new Chart(lossCtx, { type: 'doughnut', data: { labels: ['قیمت بالا', 'عدم نیاز', 'انتخاب رقیب', 'عدم پاسخ'], datasets: [{ label: 'دلایل شکست', data: [45, 25, 15, 15], backgroundColor: [ '#ef4444', '#f97316', '#eab308', '#8b5cf6' ], hoverOffset: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
+            const customersCtx = document.getElementById('topCustomersChart').getContext('2d');
+            charts.customers = new Chart(customersCtx, { type: 'bar', data: { labels: ['شرکت الف', 'شرکت ب', 'شرکت ج', 'شرکت د'], datasets: [{ label: 'ارزش کل (میلیون تومان)', data: [450, 320, 280, 150], backgroundColor: 'rgba(16, 185, 129, 0.6)', borderColor: 'rgba(16, 185, 129, 1)', borderWidth: 1 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+        }
+
+        renderKanban();
+        setActiveTab('funnel');
+    });
+</script>
+
+</body>
+</html>

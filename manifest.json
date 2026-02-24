@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Zeno CRM",
+  "version": "1.0.0",
+  "description": "Simplest AI-powered CRM. Auto-fill company details, get next actions & summaries.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Open Zeno CRM"
+  },
+  "options_page": "options.html",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://generativelanguage.googleapis.com/*"]
+}

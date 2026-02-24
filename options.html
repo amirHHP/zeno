@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zeno CRM - Settings</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 480px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    p { color: #666; font-size: 0.875rem; margin-bottom: 1rem; }
+    label { display: block; font-weight: 500; margin-bottom: 0.25rem; font-size: 0.875rem; }
+    input[type="password"] { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 8px; font-size: 0.875rem; }
+    input:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79,70,229,0.2); }
+    button { background: #4f46e5; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+    button:hover { background: #4338ca; }
+    .status { font-size: 0.875rem; margin-top: 0.75rem; }
+    .status.ok { color: #059669; }
+    .status.err { color: #dc2626; }
+    a { color: #4f46e5; }
+  </style>
+</head>
+<body>
+  <h1>Zeno CRM – Settings</h1>
+  <p>Enter your Google AI (Gemini) API key. It is stored only on your device and used to auto-fill company details, suggest next actions, and summarize deal activities.</p>
+  <label for="gemini-key">Gemini API Key</label>
+  <input type="password" id="gemini-key" placeholder="AIza..." autocomplete="off">
+  <button id="save">Save</button>
+  <div id="status" class="status" aria-live="polite"></div>
+  <p style="margin-top: 1.5rem;"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Get a Gemini API key →</a></p>
+  <script src="options.js"></script>
+</body>
+</html>
