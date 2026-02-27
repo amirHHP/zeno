@@ -656,54 +656,56 @@ Output ONLY raw JSON. No markdown block.`;
     const t = LANG_STRINGS[currentLang];
 
     detailContent.innerHTML = `
-      <div class="grid grid-cols-2 gap-4 text-center">
-        <div class="bg-white p-3 rounded-lg shadow-sm border">
+      <div class="grid grid-cols-2 detail-metrics-grid">
+        <div class="bg-white md-card detail-metrics-card p-3">
           <h3 class="font-semibold text-gray-500 text-sm mb-1">${t.detailValue}</h3>
           <p class="text-green-600 font-bold text-lg">${deal.value}</p>
         </div>
-        <div class="bg-white p-3 rounded-lg shadow-sm border">
+        <div class="bg-white md-card detail-metrics-card p-3">
           <h3 class="font-semibold text-gray-500 text-sm mb-1">${t.detailOwner}</h3>
           <p class="font-semibold">${deal.owner}</p>
         </div>
       </div>
 
-      <div class="bg-white p-4 rounded-lg shadow-sm border">
+      <div class="bg-white md-card p-4 md-section-spacing">
         <h3 class="font-bold text-md mb-3">${t.detailAssistantTitle}</h3>
         <div class="space-y-3">
-          <button id="detail-generate-summary-btn" class="w-full text-left flex items-center justify-between bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold py-2 px-4 rounded-lg transition-colors">
+          <button id="detail-generate-summary-btn" class="w-full md-tonal-button flex items-center justify-between">
             <span>${t.detailSummaryButton}</span><span>✨</span>
           </button>
-          <button id="detail-generate-action-btn" class="w-full text-left flex items-center justify-between bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-semibold py-2 px-4 rounded-lg transition-colors">
+          <button id="detail-generate-action-btn" class="w-full md-tonal-button flex items-center justify-between">
             <span>${t.detailNextActionButton}</span><span>✨</span>
           </button>
         </div>
         <div id="detail-gemini-output" class="mt-4 p-3 bg-gray-100 rounded-lg text-sm" style="display: none;"></div>
       </div>
 
-      <div>
+      <div class="md-section-spacing">
         <div class="border-b border-gray-200">
           <nav class="-mb-px flex space-x-4 space-x-reverse" aria-label="Tabs">
-            <button data-tab="activities" class="detail-tab whitespace-nowrap py-3 px-1 text-sm active">${t.detailActivitiesTab}</button>
-            <button data-tab="tasks" class="detail-tab whitespace-nowrap py-3 px-1 text-sm">${t.detailTasksTab}</button>
+            <div class="detail-tabs-shell">
+              <button data-tab="activities" class="detail-tab whitespace-nowrap text-sm active">${t.detailActivitiesTab}</button>
+              <button data-tab="tasks" class="detail-tab whitespace-nowrap text-sm">${t.detailTasksTab}</button>
+            </div>
           </nav>
         </div>
         <div class="mt-4">
           <div id="tab-activities" class="detail-tab-content active">
-            <div id="activity-timeline-container" class="space-y-4"></div>
+            <div id="activity-timeline-container" class="space-y-4 activity-timeline-card"></div>
             <div class="mt-6 pt-4 border-t border-gray-200">
               <h4 class="font-bold mb-3 text-gray-800">${t.activityFormTitle}</h4>
               <form id="add-activity-form">
-                <div>
-                  <textarea id="activity-text" rows="3" class="w-full p-2 border border-gray-300 rounded-md" placeholder="${t.activityFormPlaceholder}"></textarea>
+                <div class="md-text-field">
+                  <textarea id="activity-text" rows="3" placeholder="${t.activityFormPlaceholder}"></textarea>
                 </div>
                 <div class="my-3 flex justify-between items-center">
                   <div class="flex items-center space-x-2 space-x-reverse" id="activity-type-selector">
-                    <button type="button" data-type="note" title="یادداشت" class="activity-type-btn p-2 rounded-full transition-all duration-200">📝</button>
-                    <button type="button" data-type="call" title="تماس" class="activity-type-btn p-2 rounded-full transition-all duration-200">📞</button>
-                    <button type="button" data-type="email" title="ایمیل" class="activity-type-btn p-2 rounded-full transition-all duration-200">✉️</button>
-                    <button type="button" data-type="meeting" title="جلسه" class="activity-type-btn p-2 rounded-full transition-all duration-200">👥</button>
+                    <button type="button" data-type="note" title="یادداشت" class="activity-type-btn md-icon-button surface transition-all duration-200">📝</button>
+                    <button type="button" data-type="call" title="تماس" class="activity-type-btn md-icon-button surface transition-all duration-200">📞</button>
+                    <button type="button" data-type="email" title="ایمیل" class="activity-type-btn md-icon-button surface transition-all duration-200">✉️</button>
+                    <button type="button" data-type="meeting" title="جلسه" class="activity-type-btn md-icon-button surface transition-all duration-200">👥</button>
                   </div>
-                  <button type="submit" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors">${t.activityFormSubmit}</button>
+                  <button type="submit" class="md-filled-button">${t.activityFormSubmit}</button>
                 </div>
               </form>
             </div>
@@ -714,7 +716,7 @@ Output ONLY raw JSON. No markdown block.`;
                 ? deal.tasks
                     .map(
                       (task) => `
-              <div class="flex items-center bg-white p-3 rounded-lg">
+              <div class="flex items-center bg-white md-card p-3">
                 <input type="checkbox" class="ml-3 h-5 w-5 rounded border-gray-300" ${
                   task.done ? 'checked' : ''
                 }>
@@ -824,6 +826,8 @@ Output ONLY raw JSON. No markdown block.`;
     dealDetailPage.classList.add('active');
   }
 
+  let draggedDealId = null;
+
   function renderKanban() {
     const kanbanContainer = document.getElementById('kanban-container');
     const dotsContainer = document.getElementById('kanban-dots');
@@ -837,7 +841,7 @@ Output ONLY raw JSON. No markdown block.`;
           const probColor =
             deal.prob > 70 ? 'green' : deal.prob > 40 ? 'yellow' : 'red';
           return `
-          <div class="deal-card bg-white p-3 rounded-lg shadow-sm border cursor-pointer" data-deal-id="${deal.id}">
+          <div class="deal-card bg-white p-3 rounded-lg shadow-sm border cursor-pointer" data-deal-id="${deal.id}" draggable="true">
             <h3 class="font-semibold">${deal.name}</h3>
             <p class="text-sm text-green-600">${deal.value}</p>
             <div class="flex items-center justify-between mt-2">
@@ -857,49 +861,79 @@ Output ONLY raw JSON. No markdown block.`;
         })
         .join('');
 
-      kanbanContainer.innerHTML += `
-        <div class="kanban-stage p-4">
-          <h2 class="font-bold text-lg mb-4">
+      const stageEl = document.createElement('div');
+      stageEl.className = 'kanban-stage p-4';
+      stageEl.dataset.stageId = String(stage.id);
+      stageEl.innerHTML = `
+        <div class="kanban-stage-header">
+          <h2 class="font-bold text-lg">
             ${stage.name}
-            <span class="text-sm font-normal text-gray-500">(${stageDeals.length})</span>
           </h2>
-          <div class="space-y-3">
-            ${dealsHtml}
-          </div>
-        </div>`;
+          <span class="text-sm font-normal text-gray-500">(${stageDeals.length})</span>
+        </div>
+        <div class="kanban-stage-body space-y-3" data-stage-id="${stage.id}">
+          ${dealsHtml}
+        </div>
+      `;
+      kanbanContainer.appendChild(stageEl);
 
       dotsContainer.innerHTML += `<div class="w-2 h-2 rounded-full transition-all duration-300 ${
         index === 0 ? 'bg-indigo-600' : 'bg-gray-300'
       }"></div>`;
     });
 
-    document
-      .querySelectorAll('.deal-card')
-      .forEach((card) =>
-        card.addEventListener('click', () => {
-          const id = parseInt(card.dataset.dealId, 10);
-          const deal = dealsData.find((d) => d.id === id);
-          if (deal) renderDealDetailPage(deal);
-        }),
-      );
+    document.querySelectorAll('.deal-card').forEach((card) => {
+      card.addEventListener('click', () => {
+        const id = parseInt(card.dataset.dealId, 10);
+        const deal = dealsData.find((d) => d.id === id);
+        if (deal) renderDealDetailPage(deal);
+      });
 
-    let currentStageIndex = 0;
-    const updateDots = () => {
-      const dots = dotsContainer.children;
-      for (let i = 0; i < dots.length; i++) {
-        dots[i].classList.toggle('bg-indigo-600', i === currentStageIndex);
-        dots[i].classList.toggle('bg-gray-300', i !== currentStageIndex);
-      }
-    };
+      card.addEventListener('dragstart', (e) => {
+        draggedDealId = parseInt(card.dataset.dealId, 10);
+        card.classList.add('dragging');
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', card.dataset.dealId || '');
+        }
+      });
 
-    kanbanContainer.addEventListener('scroll', () => {
-      const newIndex = Math.round(
-        kanbanContainer.scrollLeft / kanbanContainer.offsetWidth,
-      );
-      if (newIndex !== currentStageIndex) {
-        currentStageIndex = newIndex;
-        updateDots();
-      }
+      card.addEventListener('dragend', () => {
+        draggedDealId = null;
+        card.classList.remove('dragging');
+        document
+          .querySelectorAll('.kanban-stage.drop-target')
+          .forEach((stage) => stage.classList.remove('drop-target'));
+      });
+    });
+
+    document.querySelectorAll('.kanban-stage-body').forEach((stageBody) => {
+      const stageId = parseInt(stageBody.dataset.stageId, 10);
+      const stageRoot = stageBody.closest('.kanban-stage');
+
+      ['dragenter', 'dragover'].forEach((eventName) => {
+        stageBody.addEventListener(eventName, (e) => {
+          if (!draggedDealId) return;
+          e.preventDefault();
+          if (stageRoot) stageRoot.classList.add('drop-target');
+        });
+      });
+
+      stageBody.addEventListener('dragleave', () => {
+        if (stageRoot) stageRoot.classList.remove('drop-target');
+      });
+
+      stageBody.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        if (stageRoot) stageRoot.classList.remove('drop-target');
+        if (!draggedDealId) return;
+        const dealIdx = dealsData.findIndex((d) => d.id === draggedDealId);
+        if (dealIdx === -1) return;
+        dealsData[dealIdx].stage = stageId;
+        await saveDeals();
+        draggedDealId = null;
+        renderKanban();
+      });
     });
   }
 
