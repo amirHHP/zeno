@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary SEO Meta Tags -->
+  <title id="meta-title">زِنو CRM | ساده‌ترین CRM هوشمند دنیا</title>
+  <meta name="description" id="meta-desc" content="زِنو (Zeno) با ترکیب سادگی و هوش مصنوعی، کارهای خسته‌کننده فروش مثل ورود دستی داده‌ها را حذف می‌کند. کافیست نام شرکت را بنویسید تا بقیه اطلاعات خودکار پر شود.">
+  <meta name="keywords" content="CRM, هوش مصنوعی, مدیریت مشتریان, قیف فروش, کانبان, هوشمندسازی فروش, اتوماسیون">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="زِنو CRM | ساده‌ترین CRM هوشمند دنیا">
+  <meta property="og:description" content="ثبت جادویی اطلاعات شرکت‌ها و دستیار هوشمند فروش با استفاده از هوش مصنوعی Gemini.">
+  
+  <!-- Google Fonts (Vazirmatn for Persian, Outfit for clean English headings) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Vazirmatn:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <div class="logo">
+        <span class="logo-dot"></span>
+        <span class="logo-text">ZENO <span class="logo-sub">CRM</span></span>
+      </div>
+      <nav class="nav-links">
+        <a href="#features" class="nav-link" data-t="nav.features">قابلیت‌ها</a>
+        <a href="#simulator" class="nav-link" data-t="nav.simulator">شبیه‌ساز زنده</a>
+        <a href="#setup" class="nav-link" data-t="nav.setup">راهنمای راه‌اندازی</a>
+      </nav>
+      <div class="nav-actions">
+        <button id="lang-toggle" class="btn btn-lang">EN</button>
+        <a href="https://github.com/amirHHP/zeno" target="_blank" class="btn btn-outline btn-nav-cta" data-t="nav.cta">گیت‌هاب</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container hero-container">
+        <div class="hero-badge" data-t="hero.badge">✨ ساده‌ترین CRM هوشمند دنیا مبتنی بر هوش مصنوعی</div>
+        <h1 class="hero-title" data-t="hero.title">
+          سادگی در ظاهر،<br><span class="text-contrast">هوشمندی در عمل.</span>
+        </h1>
+        <p class="hero-subtitle" data-t="hero.subtitle">
+          زِنو با ترکیب فلسفه سادگی و قدرت هوش مصنوعی، ورود دستی داده‌های مشتریان را حذف می‌کند. نام شرکت را تایپ کنید و بقیه کارها را به زنو بسپارید.
+        </p>
+        <div class="hero-ctas">
+          <a href="#setup" class="btn btn-filled" data-t="hero.ctaPrimary">شروع رایگان</a>
+          <a href="#simulator" class="btn btn-outline" data-t="hero.ctaSecondary">تست شبیه‌ساز زنده</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Simulator Section -->
+    <section id="simulator" class="simulator-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-t="sim.title">تجربه زنده زِنو</h2>
+          <p class="section-subtitle" data-t="sim.subtitle">امکانات فوق‌العاده زنو را همین‌جا، بدون نیاز به نصب، در این شبیه‌ساز تعاملی تجربه کنید.</p>
+        </div>
+
+        <!-- The Interactive Mockup Box -->
+        <div class="mockup-wrapper">
+          <div class="mockup-frame">
+            <!-- Window Titlebar -->
+            <div class="mockup-titlebar">
+              <div class="window-controls">
+                <span class="dot close"></span>
+                <span class="dot minimize"></span>
+                <span class="dot expand"></span>
+              </div>
+              <div class="window-title">Zeno CRM App</div>
+              <div class="window-lang">FA / LTR</div>
+            </div>
+
+            <!-- Inside App Container -->
+            <div class="mockup-app">
+              <!-- App Header -->
+              <header class="app-header">
+                <span class="app-title" data-t="sim.appTitle">فانل فروش</span>
+                <div class="app-header-actions">
+                  <span class="app-badge">FA</span>
+                  <span class="app-settings-link" data-t="sim.appSettings">تنظیمات (کلید Gemini)</span>
+                </div>
+              </header>
+
+              <!-- App Navigation Tabs (Simulator Mode Switchers) -->
+              <div class="app-tabs">
+                <button class="app-tab active" data-sim-tab="magic">
+                  <svg class="tab-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                  <span data-t="sim.tabMagic">ثبت جادویی</span>
+                </button>
+                <button class="app-tab" data-sim-tab="kanban">
+                  <svg class="tab-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                  <span data-t="sim.tabKanban">فانل فروش</span>
+                </button>
+                <button class="app-tab" data-sim-tab="agent">
+                  <svg class="tab-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                  <span data-t="sim.tabAgent">دستیار هوشمند</span>
+                </button>
+              </div>
+
+              <!-- App Main Body -->
+              <div class="app-body">
+                
+                <!-- Tab 1: Magic Entry Simulator -->
+                <div class="sim-view active" id="sim-view-magic">
+                  <div class="sim-magic-intro">
+                    <p class="sim-instruction" data-t="sim.magicInstruction">برای تست ثبت جادویی، یکی از شرکت‌های پیشنهادی زیر را انتخاب کنید یا نام شرکت دلخواه خود را بنویسید:</p>
+                    <div class="sim-company-tags">
+                      <button class="company-tag-btn" data-company="دیجی‌کالا">دیجی‌کالا</button>
+                      <button class="company-tag-btn" data-company="اسنپ">اسنپ</button>
+                      <button class="company-tag-btn" data-company="کافه‌بازار">کافه‌بازار</button>
+                    </div>
+                  </div>
+
+                  <div class="sim-card-form">
+                    <div class="form-row-group">
+                      <label class="form-label" data-t="sim.companyName">نام شرکت یا مشتری</label>
+                      <div class="input-with-button">
+                        <input type="text" id="sim-magic-input" placeholder="مثلاً: دیجی‌کالا">
+                        <button id="sim-magic-btn" class="btn btn-filled btn-magic">
+                          <svg class="icon-spark" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                          <span data-t="sim.magicButton">تکمیل هوشمند</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- AI Progress Indicator -->
+                    <div id="sim-magic-progress" class="magic-progress-container" style="display: none;">
+                      <div class="spinner-small"></div>
+                      <span id="sim-magic-status-text" data-t="sim.searchingWeb">در حال جستجوی وب با هوش مصنوعی Gemini...</span>
+                    </div>
+
+                    <!-- Autocompleted Form Fields -->
+                    <div class="autofill-fields mt-6">
+                      <div class="form-grid">
+                        <div class="field-item">
+                          <label class="form-label" data-t="sim.website">وب‌سایت</label>
+                          <input type="text" id="field-website" readonly placeholder="—">
+                        </div>
+                        <div class="field-item">
+                          <label class="form-label" data-t="sim.industry">صنعت</label>
+                          <input type="text" id="field-industry" readonly placeholder="—">
+                        </div>
+                        <div class="field-item">
+                          <label class="form-label" data-t="sim.value">ارزش تخمینی</label>
+                          <input type="text" id="field-value" readonly class="text-green" placeholder="—">
+                        </div>
+                        <div class="field-item">
+                          <label class="form-label" data-t="sim.address">آدرس / تلفن</label>
+                          <input type="text" id="field-address" readonly placeholder="—">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Tab 2: Kanban Funnel Simulator -->
+                <div class="sim-view" id="sim-view-kanban">
+                  <p class="sim-instruction" data-t="sim.kanbanInstruction">روی کارت‌ها کلیک کنید یا آن‌ها را بکشید تا بین ستون‌های فانل جابه‌جا شوند:</p>
+                  
+                  <div class="kanban-wrapper">
+                    <!-- Column 1 -->
+                    <div class="kanban-col" data-stage="lead">
+                      <div class="kanban-col-header">
+                        <span class="col-title" data-t="sim.colLead">سرنخ‌ها</span>
+                        <span class="col-count" id="count-lead">1</span>
+                      </div>
+                      <div class="kanban-col-cards" id="col-lead">
+                        <div class="draggable-card" draggable="true" id="card-snapp" data-deal-value="۷۰,۰۰۰,۰۰۰ تومان">
+                          <div class="card-title">اسنپ (Snapp)</div>
+                          <div class="card-details">
+                            <span class="card-badge" data-t="sim.tagTech">فناوری</span>
+                            <span class="card-val text-green">۷۰M تومان</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="kanban-col" data-stage="contacted">
+                      <div class="kanban-col-header">
+                        <span class="col-title" data-t="sim.colContact">در حال گفتگو</span>
+                        <span class="col-count" id="count-contacted">1</span>
+                      </div>
+                      <div class="kanban-col-cards" id="col-contacted">
+                        <div class="draggable-card" draggable="true" id="card-digikala" data-deal-value="۵۰,۰۰۰,۰۰۰ تومان">
+                          <div class="card-title">دیجی‌کالا (Digikala)</div>
+                          <div class="card-details">
+                            <span class="card-badge" data-t="sim.tagEcommerce">فروشگاه</span>
+                            <span class="card-val text-green">۵۰M تومان</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="kanban-col" data-stage="won">
+                      <div class="kanban-col-header">
+                        <span class="col-title" data-t="sim.colWon">موفق (Won)</span>
+                        <span class="col-count" id="count-won">1</span>
+                      </div>
+                      <div class="kanban-col-cards" id="col-won">
+                        <div class="draggable-card" draggable="true" id="card-cafebazaar" data-deal-value="۳۰,۰۰۰,۰۰۰ تومان">
+                          <div class="card-title">کافه‌بازار (Bazaar)</div>
+                          <div class="card-details">
+                            <span class="card-badge" data-t="sim.tagSoftware">نرم‌افزار</span>
+                            <span class="card-val text-green">۳۰M تومان</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sim-kanban-status-log" id="kanban-log" data-t="sim.logDefault">برای شروع کارت‌ها را جابه‌جا کنید.</div>
+                </div>
+
+                <!-- Tab 3: AI Agent Simulator -->
+                <div class="sim-view" id="sim-view-agent">
+                  <p class="sim-instruction" data-t="sim.agentInstruction">دستیار هوشمند زِنو هر معامله را تحلیل کرده و خلاصه به همراه بهترین اقدام بعدی را پیشنهاد می‌دهد:</p>
+                  
+                  <div class="agent-simulator-container">
+                    <div class="deal-header-preview">
+                      <h4 class="deal-name">دیجی‌کالا (Digikala)</h4>
+                      <span class="deal-stage-badge" data-t="sim.stageContacted">در حال گفتگو</span>
+                    </div>
+
+                    <div class="agent-box">
+                      <div class="agent-avatar-row">
+                        <div class="agent-avatar">✨</div>
+                        <div class="agent-name" data-t="sim.agentName">دستیار هوشمند زِنو (AI Agent)</div>
+                      </div>
+                      
+                      <div class="agent-chat-bubble">
+                        <div class="bubble-section">
+                          <h5 class="bubble-section-title" data-t="sim.dealSummaryTitle">📌 خلاصه معامله:</h5>
+                          <p class="bubble-text" id="agent-summary-text" data-t="sim.dealSummaryVal">دیجی‌کالا مایل به یکپارچه‌سازی سیستم لجستیک با نرم‌افزار ما است. ارزش تخمینی معامله ۵۰ میلیون تومان بوده و مذاکره با مدیر فنی در جریان است.</p>
+                        </div>
+                        <div class="bubble-section border-top">
+                          <h5 class="bubble-section-title" data-t="sim.nextActionTitle">🎯 بهترین اقدام بعدی:</h5>
+                          <p class="bubble-text text-highlight" id="agent-action-text" data-t="sim.nextActionVal">ارسال پیش‌نویس فنی همگام‌سازی وب‌سرویس تا فردا ساعت ۱۲ ظهر و پیگیری از طریق پیام‌رسان بله یا ایمیل.</p>
+                        </div>
+                      </div>
+
+                      <div class="agent-actions-group">
+                        <button class="btn btn-outline btn-sm" id="btn-agent-sim-text" data-t="sim.btnAutoText">پیشنهاد پیام پیگیری</button>
+                        <button class="btn btn-outline btn-sm" id="btn-agent-sim-bale" data-t="sim.btnSendBale">ارسال خودکار بله</button>
+                      </div>
+                      
+                      <div class="agent-interaction-output" id="agent-out" style="display: none;"></div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-t="features.title">ویژگی‌های برجسته زِنو</h2>
+          <p class="section-subtitle" data-t="features.subtitle">امکاناتی قدرتمند در قالبی فوق‌العاده ساده و بدون حاشیه.</p>
+        </div>
+
+        <div class="features-grid">
+          
+          <!-- Feature 1 -->
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h3 class="feature-card-title" data-t="features.magicTitle">ثبت جادویی اطلاعات (Magic Entry)</h3>
+            <p class="feature-card-desc" data-t="features.magicDesc">فقط نام شرکت مشتری را بنویسید. هوش مصنوعی زنو با جستجوی لحظه‌ای در وب، تمام فیلدها از جمله صنعت، آدرس، سایت و تخمین ارزش معامله را پر می‌کند.</p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+            <h3 class="feature-card-title" data-t="features.kanbanTitle">فانل فروش بصری و ساده</h3>
+            <p class="feature-card-desc" data-t="features.kanbanDesc">یک پایپ‌لاین کانبان تمیز و بدون شلوغی، کاملاً بهینه‌سازی شده برای کار بر روی موبایل و تبلت تا تمرکز شما تنها روی پیشبرد معامله باشد.</p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <h3 class="feature-card-title" data-t="features.agentTitle">تحلیل هوشمند معاملات (AI Agent)</h3>
+            <p class="feature-card-desc" data-t="features.agentDesc">زنو به صورت خودکار وضعیت معاملات را تحلیل کرده، برای شما خلاصه می‌سازد و «بهترین اقدام بعدی» را برای نهایی کردن فروش پیشنهاد می‌دهد.</p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            </div>
+            <h3 class="feature-card-title" data-t="features.autoTitle">اتوماسیون پیام‌رسان بله و ایمیل</h3>
+            <p class="feature-card-desc" data-t="features.autoDesc">نوشتن متن‌های پیگیری حرفه‌ای با هوش مصنوعی و ارسال مستقیم و سریع پیام در پیام‌رسان بله یا ایمیل مشتریان بدون فوت وقت.</p>
+          </div>
+
+          <!-- Feature 5 -->
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+            </div>
+            <h3 class="feature-card-title" data-t="features.chartTitle">گزارش‌های آماری و پیش‌بینی</h3>
+            <p class="feature-card-desc" data-t="features.chartDesc">نمودارهای بسیار جذاب برای شناسایی گلوگاه‌های فروش، پیش‌بینی احتمال برنده شدن معاملات و ارزیابی عملکرد اعضای تیم.</p>
+          </div>
+
+          <!-- Feature 6 -->
+          <div class="feature-card">
+            <div class="feature-icon">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h3 class="feature-card-title" data-t="features.privacyTitle">حفظ ۱۰۰٪ حریم خصوصی داده‌ها</h3>
+            <p class="feature-card-desc" data-t="features.privacyDesc">زنو تمام اطلاعات را به صورت محلی در مرورگر شما ذخیره می‌کند و درخواست‌های هوش مصنوعی مستقیماً با کلید API خودتان ارسال می‌شوند.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Setup / Guide Section -->
+    <section id="setup" class="setup-section">
+      <div class="container max-w-small">
+        <div class="section-header">
+          <h2 class="section-title" data-t="setup.title">راهنمای راه‌اندازی سریع</h2>
+          <p class="section-subtitle" data-t="setup.subtitle">شروع کار با زِنو در کمتر از ۳ دقیقه.</p>
+        </div>
+
+        <div class="setup-timeline">
+          <!-- Step 1 -->
+          <div class="setup-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h3 class="step-title" data-t="setup.step1Title">بارگذاری اکستنشن در مرورگر</h3>
+              <p class="step-desc" data-t="setup.step1Desc">پروژه را از گیت‌هاب دانلود کرده و در بخش اکستنشن‌های کروم (Developer Mode) آن را به عنوان Unpacked لود کنید.</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="setup-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h3 class="step-title" data-t="setup.step2Title">وارد کردن کلید هوش مصنوعی</h3>
+              <p class="step-desc" data-t="setup.step2Desc">در بخش تنظیمات اکستنشن، کلید API رایگان هوش مصنوعی Gemini را وارد کنید تا قابلیت تکمیل خودکار و تحلیل فعال شود.</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="setup-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h3 class="step-title" data-t="setup.step3Title">مدیریت آسان معاملات</h3>
+              <p class="step-desc" data-t="setup.step3Desc">زنو آماده است! روی دکمه ثبت معامله کلیک کنید و لذت کار با ساده‌ترین سیستم مدیریت مشتریان دنیا را تجربه کنید.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-cta-box">
+          <h3 data-t="setup.ctaTitle">آماده‌اید روند فروش خود را متحول کنید؟</h3>
+          <p data-t="setup.ctaDesc">پروژه زِنو کاملاً متن‌باز و رایگان در دسترس شماست.</p>
+          <a href="https://github.com/amirHHP/zeno" target="_blank" class="btn btn-filled" data-t="setup.ctaButton">دانلود و نصب از گیت‌هاب</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <span class="logo-dot"></span>
+        <span class="logo-text">ZENO <span class="logo-sub">CRM</span></span>
+      </div>
+      <p class="footer-copy" data-t="footer.copy">© ۲۰۲۶ زنو CRM. متن‌باز و توسعه‌یافته تحت لایسنس MIT.</p>
+      <div class="footer-links">
+        <a href="https://github.com/amirHHP/zeno" target="_blank" class="footer-link">GitHub</a>
+        <a href="https://github.com/amirHHP/zeno/blob/main/LICENSE" target="_blank" class="footer-link" data-t="footer.license">لایسنس</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
