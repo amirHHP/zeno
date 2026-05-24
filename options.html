@@ -1,33 +1,213 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zeno CRM - Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
-    body { font-family: system-ui, -apple-system, sans-serif; max-width: 480px; margin: 2rem auto; padding: 0 1rem; }
-    h1 { font-size: 1.25rem; margin-bottom: 0.5rem; }
-    p { color: #666; font-size: 0.875rem; margin-bottom: 1rem; }
-    label { display: block; font-weight: 500; margin-bottom: 0.25rem; font-size: 0.875rem; }
-    input[type="password"] { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 8px; font-size: 0.875rem; }
-    input:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79,70,229,0.2); }
-    button { background: #4f46e5; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
-    button:hover { background: #4338ca; }
-    .status { font-size: 0.875rem; margin-top: 0.75rem; }
-    .status.ok { color: #059669; }
-    .status.err { color: #dc2626; }
-    a { color: #4f46e5; }
+    /* Minimalist Black & White Options Styling */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --c-bg: #ffffff;
+      --c-surface: #ffffff;
+      --c-border: #e0e0e0;
+      --c-text: #111111;
+      --c-text-2: #666666;
+      --c-text-3: #999999;
+      --c-accent: #111111;
+      --c-muted: #f5f5f5;
+      --font: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+    }
+    
+    body {
+      font-family: var(--font);
+      background: var(--c-bg);
+      color: var(--c-text);
+      max-width: 480px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      line-height: 1.5;
+    }
+    
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    
+    p {
+      color: var(--c-text-2);
+      font-size: 0.8125rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    .section-card {
+      border: 1px solid var(--c-border);
+      border-radius: 4px;
+      padding: 1.25rem;
+      background: var(--c-surface);
+      margin-bottom: 1.25rem;
+    }
+    
+    .section-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--c-text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    
+    input[type="password"], input[type="text"] {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--c-border);
+      border-radius: 3px;
+      font-size: 0.8125rem;
+      background: var(--c-bg);
+      color: var(--c-text);
+      font-family: var(--font);
+      transition: border-color 0.1s ease;
+      margin-bottom: 0.75rem;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--c-accent);
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      align-items: center;
+    }
+    
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      border-radius: 3px;
+      padding: 0.55rem 1.1rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.1s ease, color 0.1s ease;
+    }
+    
+    .btn-primary {
+      background: var(--c-accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #333;
+    }
+    
+    .btn-secondary {
+      background: var(--c-muted);
+      color: var(--c-text);
+    }
+    .btn-secondary:hover {
+      background: #e8e8e8;
+    }
+    
+    .btn-outlined {
+      background: transparent;
+      color: var(--c-text);
+      border: 1px solid var(--c-border);
+    }
+    .btn-outlined:hover {
+      background: var(--c-muted);
+    }
+    
+    .status {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+    .status.ok { color: var(--c-text); }
+    .status.err { color: #cc0000; }
+    
+    a {
+      color: var(--c-text);
+      text-decoration: underline;
+      font-size: 0.75rem;
+    }
+    a:hover {
+      color: var(--c-text-2);
+    }
+    
+    /* RTL adjustments */
+    body[dir="rtl"] {
+      text-align: right;
+    }
+    body[dir="rtl"] label {
+      text-align: right;
+    }
   </style>
 </head>
-<body>
-  <h1>Zeno CRM – Settings</h1>
-  <p>Enter your Google AI (Gemini) API key. It is stored only on your device and used to auto-fill company details, suggest next actions, and summarize deal activities.</p>
-  <label for="gemini-key">Gemini API Key</label>
-  <input type="password" id="gemini-key" placeholder="AIza..." autocomplete="off">
-  <button id="save">Save</button>
-  <div id="status" class="status" aria-live="polite"></div>
-  <p style="margin-top: 1.5rem;"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Get a Gemini API key →</a></p>
+<body id="settings-body" dir="rtl">
+  <h1 id="page-title">تنظیمات Zeno CRM</h1>
+  <p id="page-desc">پیکربندی کلیدهای اتصال هوش مصنوعی و مدیریت داده‌های سیستم.</p>
+  
+  <!-- Gemini API Card -->
+  <div class="section-card">
+    <h2 class="section-title" id="api-section-title">کلید API هوش مصنوعی (Gemini)</h2>
+    <p id="api-section-desc" style="margin-bottom: 0.75rem;">این کلید فقط روی مرورگر شما ذخیره می‌شود و برای استفاده از قابلیت‌های هوشمند فانل به کار می‌رود.</p>
+    
+    <label for="gemini-key" id="api-key-label">کلید API</label>
+    <input type="password" id="gemini-key" placeholder="AIza..." autocomplete="off">
+    
+    <div class="btn-group">
+      <button id="save" class="btn-primary">ذخیره</button>
+      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" id="get-api-link" style="margin-right: auto; align-self: center;">دریافت کلید API ←</a>
+    </div>
+    <div id="status" class="status" aria-live="polite"></div>
+  </div>
+
+  <!-- Bale API Card -->
+  <div class="section-card">
+    <h2 class="section-title" id="bale-section-title">تنظیمات پیام‌رسان بله (سفیر)</h2>
+    <p id="bale-section-desc" style="margin-bottom: 0.75rem;">کلید دسترسی و شناسه بازوی خود را برای ارسال پیام‌ها و فایل‌ها به مشتریان از طریق بله تنظیم کنید.</p>
+    
+    <label for="bale-key" id="bale-key-label">کلید دسترسی سفیر (API Access Key)</label>
+    <input type="password" id="bale-key" placeholder="api-access-key..." autocomplete="off">
+    
+    <label for="bale-bot-id" id="bale-bot-id-label">شناسه بازو (Bot ID)</label>
+    <input type="text" id="bale-bot-id" placeholder="123456789" autocomplete="off">
+    
+    <div class="btn-group">
+      <button id="bale-save" class="btn-primary">ذخیره تنظیمات بله</button>
+    </div>
+    <div id="bale-status" class="status" aria-live="polite"></div>
+  </div>
+
+  <!-- Backup & Restore Card -->
+  <div class="section-card">
+    <h2 class="section-title" id="backup-section-title">پشتیبان‌گیری و بازیابی</h2>
+    <p id="backup-section-desc" style="margin-bottom: 0.75rem;">از تمام معاملات، یادداشت‌ها، کلیدها و تاریخچه خود نسخه پشتیبان تهیه کنید یا آن را بازیابی کنید.</p>
+    
+    <div class="btn-group">
+      <button id="export-btn" class="btn-primary">خروجی پشتیبان (Export)</button>
+      <button id="import-trigger-btn" class="btn-secondary">ورود پشتیبان (Import)</button>
+      <input type="file" id="import-file" accept=".json" style="display: none;">
+    </div>
+    <div id="backup-status" class="status" aria-live="polite"></div>
+  </div>
+  
   <script src="options.js"></script>
 </body>
 </html>
