@@ -611,6 +611,7 @@ button:active { transform: none; }
 }
 
 .md-text-field input,
+.md-text-field select,
 .md-text-field textarea {
   width: 100%;
   border-radius: 3px;
@@ -624,6 +625,7 @@ button:active { transform: none; }
 }
 
 .md-text-field input:focus,
+.md-text-field select:focus,
 .md-text-field textarea:focus {
   border-color: var(--c-accent);
   box-shadow: none;

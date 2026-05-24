@@ -861,35 +861,49 @@ Output ONLY raw JSON. No markdown block.`;
         <form id="deal-info-edit-form" style="display: none;" class="space-y-3 mt-2">
           <div>
             <label class="text-xs text-gray-500 block mb-1">${t.detailContact}</label>
-            <input type="text" id="edit-contact-input" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" value="${deal.contact || ''}">
+            <div class="md-text-field">
+              <input type="text" id="edit-contact-input" value="${deal.contact || ''}">
+            </div>
           </div>
           <div>
             <label class="text-xs text-gray-500 block mb-1">${t.detailPhone}</label>
-            <input type="text" id="edit-phone-input" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" value="${deal.phone || ''}">
+            <div class="md-text-field">
+              <input type="text" id="edit-phone-input" value="${deal.phone || ''}">
+            </div>
           </div>
           <div>
             <label class="text-xs text-gray-500 block mb-1">${t.detailWebsite}</label>
-            <input type="text" id="edit-website-input" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" value="${deal.website || ''}">
+            <div class="md-text-field">
+              <input type="text" id="edit-website-input" value="${deal.website || ''}">
+            </div>
           </div>
           <div>
             <label class="text-xs text-gray-500 block mb-1">${t.detailIndustry}</label>
-            <input type="text" id="edit-industry-input" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" value="${deal.industry || ''}">
+            <div class="md-text-field">
+              <input type="text" id="edit-industry-input" value="${deal.industry || ''}">
+            </div>
           </div>
           <div>
             <label class="text-xs text-gray-500 block mb-1">${t.detailAddress}</label>
-            <input type="text" id="edit-address-input" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" value="${deal.address || ''}">
+            <div class="md-text-field">
+              <input type="text" id="edit-address-input" value="${deal.address || ''}">
+            </div>
           </div>
           <div>
             <label class="text-xs text-gray-500 block mb-1">${t.detailValue}</label>
-            <input type="text" id="edit-value-input" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" value="${deal.value || ''}">
+            <div class="md-text-field">
+              <input type="text" id="edit-value-input" value="${deal.value || ''}">
+            </div>
           </div>
           <div>
             <label class="text-xs text-gray-500 block mb-1">${t.detailOwner}</label>
-            <input type="text" id="edit-owner-input" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" value="${deal.owner || ''}">
+            <div class="md-text-field">
+              <input type="text" id="edit-owner-input" value="${deal.owner || ''}">
+            </div>
           </div>
           <div class="flex justify-end space-x-2 space-x-reverse pt-2 border-t border-gray-100">
-            <button type="button" id="cancel-info-btn" class="px-3 py-1.5 rounded bg-gray-100 text-xs text-gray-700 hover:bg-gray-200">${t.cancelBtn}</button>
-            <button type="submit" class="px-3 py-1.5 rounded bg-indigo-600 text-xs text-white hover:bg-indigo-700 font-medium">${t.saveBtn}</button>
+            <button type="button" id="cancel-info-btn" class="md-tonal-button text-xs">${t.cancelBtn}</button>
+            <button type="submit" class="md-filled-button text-xs font-medium">${t.saveBtn}</button>
           </div>
         </form>
       </div>
@@ -908,8 +922,10 @@ Output ONLY raw JSON. No markdown block.`;
           <div>
             <label class="text-xs text-gray-500 block mb-1">${t.detailPhone}</label>
             <div class="flex gap-2">
-              <input type="text" id="bale-phone-input" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" value="${deal.phone || ''}" placeholder="${t.balePhonePlaceholder}">
-              <button type="button" id="bale-phone-check-btn" class="px-2.5 py-1 text-xs border border-gray-300 rounded hover:bg-gray-50 transition-colors">${currentLang === 'fa' ? 'بررسی شماره' : 'Check Phone'}</button>
+              <div class="flex-1 md-text-field">
+                <input type="text" id="bale-phone-input" value="${deal.phone || ''}" placeholder="${t.balePhonePlaceholder}">
+              </div>
+              <button type="button" id="bale-phone-check-btn" class="md-outlined-button text-xs">${currentLang === 'fa' ? 'بررسی شماره' : 'Check Phone'}</button>
             </div>
             <div id="bale-phone-warn" class="text-xs mt-1 text-red-600 font-medium" style="display: none;"></div>
           </div>
@@ -930,7 +946,9 @@ Output ONLY raw JSON. No markdown block.`;
                 <label class="text-xs text-gray-500">${t.baleTypeSimple}</label>
                 <button type="button" id="bale-insert-ai-text-btn" class="text-xs text-indigo-600 hover:underline" style="display: none;">${t.baleInsertAIFollowup}</button>
               </div>
-              <textarea id="bale-text-input" rows="3" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" placeholder="${t.baleTextPlaceholder}"></textarea>
+              <div class="md-text-field">
+                <textarea id="bale-text-input" rows="3" placeholder="${t.baleTextPlaceholder}"></textarea>
+              </div>
             </div>
             
             <!-- Secure Checkbox -->
@@ -949,20 +967,26 @@ Output ONLY raw JSON. No markdown block.`;
                 <div class="grid grid-cols-2 gap-2">
                   <div>
                     <label class="text-[10px] text-gray-500 block mb-0.5">${t.baleButtonTextLabel}</label>
-                    <input type="text" id="bale-btn-text" class="w-full text-xs border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" placeholder="مشاهده وب‌سایت">
+                    <div class="md-text-field">
+                      <input type="text" id="bale-btn-text" placeholder="مشاهده وب‌سایت">
+                    </div>
                   </div>
                   <div>
                     <label class="text-[10px] text-gray-500 block mb-0.5">${t.baleButtonActionLabel}</label>
-                    <select id="bale-btn-action" class="w-full text-xs border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white">
-                      <option value="url">${t.baleActionUrl}</option>
-                      <option value="copy_text">${t.baleActionCopy}</option>
-                      <option value="web_app">${t.baleActionWebApp}</option>
-                    </select>
+                    <div class="md-text-field">
+                      <select id="bale-btn-action">
+                        <option value="url">${t.baleActionUrl}</option>
+                        <option value="copy_text">${t.baleActionCopy}</option>
+                        <option value="web_app">${t.baleActionWebApp}</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
                 <div>
                   <label class="text-[10px] text-gray-500 block mb-0.5">${t.baleButtonValueLabel}</label>
-                  <input type="text" id="bale-btn-val" class="w-full text-xs border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" placeholder="https://example.com">
+                  <div class="md-text-field">
+                    <input type="text" id="bale-btn-val" placeholder="https://example.com">
+                  </div>
                 </div>
               </div>
             </details>
@@ -972,7 +996,9 @@ Output ONLY raw JSON. No markdown block.`;
           <div id="bale-tab-content-otp" class="bale-tab-content space-y-3" style="display: none;">
             <div>
               <label class="text-xs text-gray-500 block mb-1">${t.baleTypeOTP}</label>
-              <input type="text" id="bale-otp-input" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" placeholder="${t.baleOtpPlaceholder}">
+              <div class="md-text-field">
+                <input type="text" id="bale-otp-input" placeholder="${t.baleOtpPlaceholder}">
+              </div>
             </div>
           </div>
           
@@ -980,11 +1006,15 @@ Output ONLY raw JSON. No markdown block.`;
           <div id="bale-tab-content-file" class="bale-tab-content space-y-3" style="display: none;">
             <div>
               <label class="text-xs text-gray-500 block mb-1">${t.baleFileLabel}</label>
-              <input type="file" id="bale-file-input" class="w-full text-xs border border-gray-200 rounded p-2 focus:border-indigo-600 focus:outline-none bg-white">
+              <div class="md-text-field">
+                <input type="file" id="bale-file-input">
+              </div>
             </div>
             <div>
               <label class="text-xs text-gray-500 block mb-1">${currentLang === 'fa' ? 'کپشن فایل (اختیاری)' : 'File Caption (Optional)'}</label>
-              <input type="text" id="bale-file-caption" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white" placeholder="توضیح مربوط به فایل...">
+              <div class="md-text-field">
+                <input type="text" id="bale-file-caption" placeholder="توضیح مربوط به فایل...">
+              </div>
             </div>
             <div class="flex items-center">
               <input type="checkbox" id="bale-file-secure" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
@@ -994,7 +1024,7 @@ Output ONLY raw JSON. No markdown block.`;
           
           <!-- Send Button and Status Message -->
           <div>
-            <button type="button" id="bale-send-btn" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-sm font-semibold transition-colors flex justify-center items-center gap-2">
+            <button type="button" id="bale-send-btn" class="w-full md-filled-button flex justify-center items-center gap-2">
               <span>${t.baleBtnSend}</span>
             </button>
             <div id="bale-send-status" class="text-xs mt-2 p-2.5 rounded-lg" style="display: none;"></div>

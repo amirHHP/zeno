@@ -141,17 +141,23 @@
                             <div class="space-y-4">
                                 <div>
                                     <label class="text-xs text-gray-500 block mb-1" id="bale-auto-select-label">انتخاب معامله / مشتری</label>
-                                    <select id="bale-auto-deal-select" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none bg-white">
-                                        <option value="" id="bale-auto-option-default">-- انتخاب کنید --</option>
-                                    </select>
+                                    <div class="md-text-field">
+                                        <select id="bale-auto-deal-select" class="bg-white">
+                                            <option value="" id="bale-auto-option-default">-- انتخاب کنید --</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div>
                                     <label class="text-xs text-gray-500 block mb-1" id="bale-auto-phone-label">شماره تلفن</label>
-                                    <input type="text" id="bale-auto-phone" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none">
+                                    <div class="md-text-field">
+                                        <input type="text" id="bale-auto-phone">
+                                    </div>
                                 </div>
                                 <div>
                                     <label class="text-xs text-gray-500 block mb-1" id="bale-auto-text-label">متن پیام</label>
-                                    <textarea id="bale-auto-text" rows="3" class="w-full text-sm border border-gray-200 rounded p-1.5 focus:border-indigo-600 focus:outline-none"></textarea>
+                                    <div class="md-text-field">
+                                        <textarea id="bale-auto-text" rows="3"></textarea>
+                                    </div>
                                 </div>
                                 <div>
                                     <button id="bale-auto-send-btn" class="w-full md-filled-button">ارسال پیام</button>
